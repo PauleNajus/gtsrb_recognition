@@ -1,0 +1,90 @@
+2024-09-01 20:54:45,306 INFO: Traffic Sign Recognition startup [in e:\LOCK\Education\Code_Academy\Projects\gtsrb_recognition\src\utils\logging_config.py:15]
+2024-09-01 20:54:47,848 INFO: Traffic Sign Recognition startup [in e:\LOCK\Education\Code_Academy\Projects\gtsrb_recognition\src\utils\logging_config.py:15]
+2024-09-01 21:00:24,974 INFO: Loaded data shapes: X=(78418, 836), y=(78418,) [in e:\LOCK\Education\Code_Academy\Projects\gtsrb_recognition\src\app\routes.py:53]
+2024-09-01 21:00:27,273 ERROR: Error in train_model: Cannot reshape input of shape (78418, 836) to square image [in e:\LOCK\Education\Code_Academy\Projects\gtsrb_recognition\src\app\routes.py:94]
+Traceback (most recent call last):
+  File "e:\LOCK\Education\Code_Academy\Projects\gtsrb_recognition\src\app\routes.py", line 58, in train_model
+    model, best_params = tune_cnn(X, y)
+                         ^^^^^^^^^^^^^^
+  File "e:\LOCK\Education\Code_Academy\Projects\gtsrb_recognition\src\models\hyperparameter_tuning.py", line 57, in tune_cnn
+    study.optimize(lambda trial: objective_cnn(trial, X, y), n_trials=n_trials)
+  File "E:\LOCK\Education\Code_Academy\Projects\gtsrb_recognition\.venv\Lib\site-packages\optuna\study\study.py", line 451, in optimize
+    _optimize(
+  File "E:\LOCK\Education\Code_Academy\Projects\gtsrb_recognition\.venv\Lib\site-packages\optuna\study\_optimize.py", line 62, in _optimize
+    _optimize_sequential(
+  File "E:\LOCK\Education\Code_Academy\Projects\gtsrb_recognition\.venv\Lib\site-packages\optuna\study\_optimize.py", line 159, in _optimize_sequential
+    frozen_trial = _run_trial(study, func, catch)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\LOCK\Education\Code_Academy\Projects\gtsrb_recognition\.venv\Lib\site-packages\optuna\study\_optimize.py", line 247, in _run_trial
+    raise func_err
+  File "E:\LOCK\Education\Code_Academy\Projects\gtsrb_recognition\.venv\Lib\site-packages\optuna\study\_optimize.py", line 196, in _run_trial
+    value_or_values = func(trial)
+                      ^^^^^^^^^^^
+  File "e:\LOCK\Education\Code_Academy\Projects\gtsrb_recognition\src\models\hyperparameter_tuning.py", line 57, in <lambda>
+    study.optimize(lambda trial: objective_cnn(trial, X, y), n_trials=n_trials)
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "e:\LOCK\Education\Code_Academy\Projects\gtsrb_recognition\src\models\hyperparameter_tuning.py", line 39, in objective_cnn
+    trained_model = train_model(model, X, y, epochs=Config.CNN_EPOCHS,
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "e:\LOCK\Education\Code_Academy\Projects\gtsrb_recognition\src\models\neural_network.py", line 141, in train_model
+    raise ValueError(f"Cannot reshape input of shape {X.shape} to square image")
+ValueError: Cannot reshape input of shape (78418, 836) to square image
+2024-09-01 21:02:43,247 INFO: Traffic Sign Recognition startup [in e:\LOCK\Education\Code_Academy\Projects\gtsrb_recognition\src\utils\logging_config.py:15]
+2024-09-01 21:02:45,780 INFO: Traffic Sign Recognition startup [in e:\LOCK\Education\Code_Academy\Projects\gtsrb_recognition\src\utils\logging_config.py:15]
+2024-09-01 21:07:25,914 INFO: Loaded data shapes: X=(78418, 836), y=(78418,) [in e:\LOCK\Education\Code_Academy\Projects\gtsrb_recognition\src\app\routes.py:53]
+2024-09-01 21:07:28,082 ERROR: Error in train_model: Cannot reshape input of shape (78418, 836) to square image [in e:\LOCK\Education\Code_Academy\Projects\gtsrb_recognition\src\app\routes.py:94]
+Traceback (most recent call last):
+  File "e:\LOCK\Education\Code_Academy\Projects\gtsrb_recognition\src\app\routes.py", line 58, in train_model
+    model, best_params = tune_cnn(X, y)
+                         ^^^^^^^^^^^^^^
+  File "e:\LOCK\Education\Code_Academy\Projects\gtsrb_recognition\src\models\hyperparameter_tuning.py", line 57, in tune_cnn
+    study.optimize(lambda trial: objective_cnn(trial, X, y), n_trials=n_trials)
+  File "E:\LOCK\Education\Code_Academy\Projects\gtsrb_recognition\.venv\Lib\site-packages\optuna\study\study.py", line 451, in optimize
+    _optimize(
+  File "E:\LOCK\Education\Code_Academy\Projects\gtsrb_recognition\.venv\Lib\site-packages\optuna\study\_optimize.py", line 62, in _optimize
+    _optimize_sequential(
+  File "E:\LOCK\Education\Code_Academy\Projects\gtsrb_recognition\.venv\Lib\site-packages\optuna\study\_optimize.py", line 159, in _optimize_sequential
+    frozen_trial = _run_trial(study, func, catch)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\LOCK\Education\Code_Academy\Projects\gtsrb_recognition\.venv\Lib\site-packages\optuna\study\_optimize.py", line 247, in _run_trial
+    raise func_err
+  File "E:\LOCK\Education\Code_Academy\Projects\gtsrb_recognition\.venv\Lib\site-packages\optuna\study\_optimize.py", line 196, in _run_trial
+    value_or_values = func(trial)
+                      ^^^^^^^^^^^
+  File "e:\LOCK\Education\Code_Academy\Projects\gtsrb_recognition\src\models\hyperparameter_tuning.py", line 57, in <lambda>
+    study.optimize(lambda trial: objective_cnn(trial, X, y), n_trials=n_trials)
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "e:\LOCK\Education\Code_Academy\Projects\gtsrb_recognition\src\models\hyperparameter_tuning.py", line 39, in objective_cnn
+    trained_model = train_model(model, X, y, epochs=Config.CNN_EPOCHS,
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "e:\LOCK\Education\Code_Academy\Projects\gtsrb_recognition\src\models\neural_network.py", line 141, in train_model
+    raise ValueError(f"Cannot reshape input of shape {X.shape} to square image")
+ValueError: Cannot reshape input of shape (78418, 836) to square image
+2024-09-01 21:11:40,479 INFO: Traffic Sign Recognition startup [in e:\LOCK\Education\Code_Academy\Projects\gtsrb_recognition\src\utils\logging_config.py:15]
+2024-09-01 21:11:54,171 INFO: Traffic Sign Recognition startup [in e:\LOCK\Education\Code_Academy\Projects\gtsrb_recognition\src\utils\logging_config.py:15]
+2024-09-01 21:12:20,902 INFO: Traffic Sign Recognition startup [in e:\LOCK\Education\Code_Academy\Projects\gtsrb_recognition\src\utils\logging_config.py:15]
+2024-09-01 21:12:54,177 INFO: Traffic Sign Recognition startup [in e:\LOCK\Education\Code_Academy\Projects\gtsrb_recognition\src\utils\logging_config.py:15]
+2024-09-01 21:13:01,892 INFO: Traffic Sign Recognition startup [in e:\LOCK\Education\Code_Academy\Projects\gtsrb_recognition\src\utils\logging_config.py:15]
+2024-09-01 21:13:41,462 INFO: Traffic Sign Recognition startup [in e:\LOCK\Education\Code_Academy\Projects\gtsrb_recognition\src\utils\logging_config.py:15]
+2024-09-01 21:13:50,327 INFO: Traffic Sign Recognition startup [in e:\LOCK\Education\Code_Academy\Projects\gtsrb_recognition\src\utils\logging_config.py:15]
+2024-09-01 21:14:08,416 INFO: Traffic Sign Recognition startup [in e:\LOCK\Education\Code_Academy\Projects\gtsrb_recognition\src\utils\logging_config.py:15]
+2024-09-01 21:14:28,053 INFO: Traffic Sign Recognition startup [in e:\LOCK\Education\Code_Academy\Projects\gtsrb_recognition\src\utils\logging_config.py:15]
+2024-09-01 21:14:42,672 INFO: Traffic Sign Recognition startup [in e:\LOCK\Education\Code_Academy\Projects\gtsrb_recognition\src\utils\logging_config.py:15]
+2024-09-01 21:14:49,219 INFO: Traffic Sign Recognition startup [in e:\LOCK\Education\Code_Academy\Projects\gtsrb_recognition\src\utils\logging_config.py:15]
+2024-09-01 21:15:08,079 INFO: Traffic Sign Recognition startup [in e:\LOCK\Education\Code_Academy\Projects\gtsrb_recognition\src\utils\logging_config.py:15]
+2024-09-01 21:15:21,525 INFO: Traffic Sign Recognition startup [in e:\LOCK\Education\Code_Academy\Projects\gtsrb_recognition\src\utils\logging_config.py:15]
+2024-09-01 21:16:02,693 INFO: Traffic Sign Recognition startup [in e:\LOCK\Education\Code_Academy\Projects\gtsrb_recognition\src\utils\logging_config.py:15]
+2024-09-01 21:16:08,834 INFO: Traffic Sign Recognition startup [in e:\LOCK\Education\Code_Academy\Projects\gtsrb_recognition\src\utils\logging_config.py:15]
+2024-09-01 21:16:11,358 INFO: Traffic Sign Recognition startup [in e:\LOCK\Education\Code_Academy\Projects\gtsrb_recognition\src\utils\logging_config.py:15]
+2024-09-01 21:18:50,052 INFO: Loaded data shapes: X=(78418, 32, 32, 3), y=(78418,) [in e:\LOCK\Education\Code_Academy\Projects\gtsrb_recognition\src\app\routes.py:53]
+2024-09-01 21:23:07,888 INFO: Traffic Sign Recognition startup [in e:\LOCK\Education\Code_Academy\Projects\gtsrb_recognition\src\utils\logging_config.py:15]
+2024-09-01 21:23:10,846 INFO: Traffic Sign Recognition startup [in e:\LOCK\Education\Code_Academy\Projects\gtsrb_recognition\src\utils\logging_config.py:15]
+2024-09-01 21:26:21,109 INFO: Loaded data shapes: X=(78418, 32, 32, 3), y=(78418,) [in e:\LOCK\Education\Code_Academy\Projects\gtsrb_recognition\src\app\routes.py:53]
+2024-09-01 21:41:25,855 INFO: Traffic Sign Recognition startup [in e:\LOCK\Education\Code_Academy\Projects\gtsrb_recognition\src\utils\logging_config.py:15]
+2024-09-01 21:41:40,927 INFO: Traffic Sign Recognition startup [in e:\LOCK\Education\Code_Academy\Projects\gtsrb_recognition\src\utils\logging_config.py:15]
+2024-09-01 21:43:00,192 INFO: Traffic Sign Recognition startup [in e:\LOCK\Education\Code_Academy\Projects\gtsrb_recognition\src\utils\logging_config.py:15]
+2024-09-01 21:43:04,741 INFO: Traffic Sign Recognition startup [in e:\LOCK\Education\Code_Academy\Projects\gtsrb_recognition\src\utils\logging_config.py:15]
+2024-09-01 21:43:41,086 INFO: Traffic Sign Recognition startup [in e:\LOCK\Education\Code_Academy\Projects\gtsrb_recognition\src\utils\logging_config.py:15]
+2024-09-01 21:44:09,721 INFO: Traffic Sign Recognition startup [in e:\LOCK\Education\Code_Academy\Projects\gtsrb_recognition\src\utils\logging_config.py:15]
+2024-09-01 21:44:20,531 INFO: Traffic Sign Recognition startup [in e:\LOCK\Education\Code_Academy\Projects\gtsrb_recognition\src\utils\logging_config.py:15]
+2024-09-01 21:44:27,633 INFO: Traffic Sign Recognition startup [in e:\LOCK\Education\Code_Academy\Projects\gtsrb_recognition\src\utils\logging_config.py:15]

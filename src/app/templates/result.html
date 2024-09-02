@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Training Results</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+    <div class="container mx-auto px-4 py-8">
+        <h1 id="training-results" class="text-3xl font-bold mb-8 text-center">Training Results</h1>
+
+        {% if results %}
+        <div class="bg-white shadow-md rounded-lg overflow-hidden">
+            <table class="w-full">
+                <thead>
+                    <tr class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
+                        <th class="py-3 px-6 text-left">Model Name</th>
+                        <th class="py-3 px-6 text-left">Accuracy</th>
+                        <th class="py-3 px-6 text-left">F1 Score</th>
+                        <th class="py-3 px-6 text-left">Validation Accuracy</th>
+                        <th class="py-3 px-6 text-left">Validation F1 Score</th>
+                        <th class="py-3 px-6 text-left">Test Accuracy</th>
+                        <th class="py-3 px-6 text-left">Test F1 Score</th>
+                        <th class="py-3 px-6 text-left">Training Time (s)</th>
+                        <th class="py-3 px-6 text-left">Timestamp</th>
+                    </tr>
+                </thead>
+                <tbody class="text-gray-600 text-sm font-light">
+                    {% for result in results %}
+                    <tr class="border-b border-gray-200 hover:bg-gray-100">
+                        <td class="py-3 px-6 text-left whitespace-nowrap">{{ result.model_name }}</td>
+                        <td class="py-3 px-6 text-left">{{ "%.2f"|format(result.accuracy * 100) }}%</td>
+                        <td class="py-3 px-6 text-left">{{ "%.2f"|format(result.f1_score * 100) }}%</td>
+                        <td class="py-3 px-6 text-left">{{ "%.2f"|format(result.val_accuracy * 100) }}%</td>
+                        <td class="py-3 px-6 text-left">{{ "%.2f"|format(result.val_f1_score * 100) }}%</td>
+                        <td class="py-3 px-6 text-left">{{ "%.2f"|format(result.test_accuracy * 100) }}%</td>
+                        <td class="py-3 px-6 text-left">{{ "%.2f"|format(result.test_f1_score * 100) }}%</td>
+                        <td class="py-3 px-6 text-left">{{ "%.2f"|format(result.training_time) }}</td>
+                        <td class="py-3 px-6 text-left">{{ result.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="text-center text-gray-600">No results found.</p>
+        {% endif %}
+
+        <div class="mt-8 text-center">
+            <a href="/" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Back to Home</a>
+        </div>
+    </div>
+</body>
+</html>

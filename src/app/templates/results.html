@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Traffic Sign Recognition Results</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+    <div class="container mx-auto px-4 py-8">
+        <h1 class="text-3xl font-bold mb-8 text-center">Traffic Sign Recognition Results</h1>
+        
+        {% if results %}
+            <div class="bg-white shadow-md rounded-lg overflow-x-auto">
+                <table class="min-w-full">
+                    <thead class="bg-gray-200">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Model Name</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Accuracy</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">F1 Score</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Val Accuracy</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Val F1 Score</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Test Accuracy</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Test F1 Score</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Training Time</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Timestamp</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        {% for result in results %}
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ result.model_name }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ "%.2f"|format(result.accuracy * 100) }}%</td>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ "%.2f"|format(result.f1_score * 100) }}%</td>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ "%.2f"|format(result.val_accuracy * 100) }}%</td>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ "%.2f"|format(result.val_f1_score * 100) }}%</td>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ "%.2f"|format(result.test_accuracy * 100) }}%</td>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ "%.2f"|format(result.test_f1_score * 100) }}%</td>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ "%.2f"|format(result.training_time) }} s</td>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ result.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <p class="text-center text-gray-600">No results found.</p>
+        {% endif %}
+        
+        <div class="mt-8 text-center">
+            <a href="/" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Back to Home</a>
+        </div>
+    </div>
+</body>
+</html>

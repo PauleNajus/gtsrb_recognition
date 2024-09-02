@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Traffic Sign Recognition</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+    <div class="container mx-auto px-4 py-8">
+        <div class="mb-8">
+            <img src="{{ url_for('static', filename='images/banner.png') }}" alt="Traffic Sign Recognition Banner" class="w-full h-auto rounded-lg shadow-md">
+        </div>
+
+        <h1 class="text-3xl font-bold mb-8 text-center">Traffic Sign Recognition</h1>
+
+        <div class="mb-8 bg-white shadow-md rounded-lg p-6">
+            <h2 class="text-2xl font-semibold mb-4 text-center">Upload Image</h2>
+            <form id="upload-form" class="flex flex-col items-center" enctype="multipart/form-data">
+                <input type="file" name="file" accept=".png,.jpg,.jpeg,.gif,.ppm" class="mb-4">
+                <select name="model_type" class="mb-4 p-2 border rounded">
+                    <option value="cnn">CNN</option>
+                    <option value="random_forest">Random Forest</option>
+                </select>
+                <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                    Upload
+                </button>
+            </form>
+            <div id="upload-result" class="mt-4 text-center"></div>
+        </div>
+
+        <div class="mb-8 bg-white shadow-md rounded-lg p-6">
+            <h2 class="text-2xl font-semibold mb-4 text-center">Train Model</h2>
+            <div class="flex justify-center space-x-4 mb-4">
+                <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-2" onclick="trainModel('cnn')">CNN</button>
+                <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-2" onclick="trainModel('random_forest')">Random Forest</button>
+                <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-2" onclick="trainModel('vision_transformer')">Vision Transformer</button>
+            </div>
+            <div id="training-result" class="mt-4 text-center"></div>
+        </div>
+
+        <div class="mb-8 bg-white shadow-md rounded-lg p-6">
+            <h2 class="text-2xl font-semibold mb-4 text-center">Predict</h2>
+            <form id="predict-form" class="flex flex-col items-center" enctype="multipart/form-data">
+                <input type="file" name="file" accept=".png,.jpg,.jpeg,.gif,.ppm" class="mb-4">
+                <select name="model_type" class="mb-4 p-2 border rounded">
+                    <option value="cnn">CNN</option>
+                    <option value="random_forest">Random Forest</option>
+                    <option value="vision_transformer">Vision Transformer</option>
+                </select>
+                <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                    Predict
+                </button>
+            </form>
+            <div id="prediction-result" class="mt-4 text-lg font-semibold text-center"></div>
+        </div>
+
+        <div class="mb-8 bg-white shadow-md rounded-lg p-6">
+            <h2 class="text-2xl font-semibold mb-4 text-center">Results</h2>
+            <div class="text-center">
+                <a href="/results" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">View Results</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('upload-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            var formData = new FormData(this);
+            fetch('/upload', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById('upload-result').innerHTML = `
+                        <p class="text-green-600">File uploaded successfully: ${data.filename}</p>
+                        <p class="font-bold">Prediction: ${data.prediction} (Class ID: ${data.class_id})</p>
+                    `;
+                } else {
+                    document.getElementById('upload-result').innerHTML = `
+                        <p class="text-red-600">Error: ${data.error}</p>
+                    `;
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('upload-result').innerHTML = `
+                    <p class="text-red-600">An unexpected error occurred. Please try again.</p>
+                `;
+            });
+        });
+
+        function trainModel(modelType) {
+            fetch('/train', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ model_type: modelType })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById('training-result').innerHTML = `
+                        <p class="text-green-600">Model trained successfully!</p>
+                        <p>Accuracy: ${data.accuracy}</p>
+                        <p>F1 Score: ${data.f1_score}</p>
+                    `;
+                } else {
+                    document.getElementById('training-result').innerHTML = `
+                        <p class="text-red-600">Error: ${data.error}</p>
+                    `;
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('training-result').innerHTML = `
+                    <p class="text-red-600">An unexpected error occurred during training. Please try again.</p>
+                `;
+            });
+        }
+
+        document.getElementById('predict-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            var formData = new FormData(this);
+            fetch('/predict', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.prediction) {
+                    document.getElementById('prediction-result').innerHTML = `
+                        <p class="text-green-600">Prediction: ${data.prediction}</p>
+                        <p>Class Index: ${data.class_index}</p>
+                    `;
+                } else {
+                    document.getElementById('prediction-result').innerHTML = `
+                        <p class="text-red-600">Error: ${data.error}</p>
+                    `;
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('prediction-result').innerHTML = `
+                    <p class="text-red-600">An unexpected error occurred during prediction. Please try again.</p>
+                `;
+            });
+        });
+    </script>
+</body>
+</html>

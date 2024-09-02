@@ -1,0 +1,100 @@
+2024-09-01 21:49:57,348 INFO: Traffic Sign Recognition startup [in e:\LOCK\Education\Code_Academy\Projects\gtsrb_recognition\src\utils\logging_config.py:15]
+2024-09-01 21:50:00,222 INFO: Traffic Sign Recognition startup [in e:\LOCK\Education\Code_Academy\Projects\gtsrb_recognition\src\utils\logging_config.py:15]
+2024-09-01 21:50:51,751 INFO: Loaded data shapes: X=(78418, 32, 32, 3), y=(78418,) [in e:\LOCK\Education\Code_Academy\Projects\gtsrb_recognition\src\app\routes.py:55]
+2024-09-01 22:18:18,824 ERROR: Error in train_model: (sqlite3.OperationalError) no such table: model_results
+[SQL: INSERT INTO model_results (model_name, accuracy, f1_score, training_time, timestamp) VALUES (?, ?, ?, ?, ?)]
+[parameters: ('cnn', 0.010278252442041369, 0.0008783862345094484, 1647.0551164150238, None)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8) [in e:\LOCK\Education\Code_Academy\Projects\gtsrb_recognition\src\app\routes.py:93]
+Traceback (most recent call last):
+  File "E:\LOCK\Education\Code_Academy\Projects\gtsrb_recognition\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1969, in _exec_single_context
+    self.dialect.do_execute(
+  File "E:\LOCK\Education\Code_Academy\Projects\gtsrb_recognition\.venv\Lib\site-packages\sqlalchemy\engine\default.py", line 922, in do_execute
+    cursor.execute(statement, parameters)
+sqlite3.OperationalError: no such table: model_results
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "e:\LOCK\Education\Code_Academy\Projects\gtsrb_recognition\src\app\routes.py", line 75, in train_model
+    add_model_result(session, model_type, evaluation_results['accuracy'],
+  File "e:\LOCK\Education\Code_Academy\Projects\gtsrb_recognition\src\database\operations.py", line 18, in add_model_result
+    session.commit()
+  File "E:\LOCK\Education\Code_Academy\Projects\gtsrb_recognition\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 1969, in commit
+    trans.commit(_to_root=True)
+  File "<string>", line 2, in commit
+  File "E:\LOCK\Education\Code_Academy\Projects\gtsrb_recognition\.venv\Lib\site-packages\sqlalchemy\orm\state_changes.py", line 139, in _go
+    ret_value = fn(self, *arg, **kw)
+                ^^^^^^^^^^^^^^^^^^^^
+  File "E:\LOCK\Education\Code_Academy\Projects\gtsrb_recognition\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 1256, in commit
+    self._prepare_impl()
+  File "<string>", line 2, in _prepare_impl
+  File "E:\LOCK\Education\Code_Academy\Projects\gtsrb_recognition\.venv\Lib\site-packages\sqlalchemy\orm\state_changes.py", line 139, in _go
+    ret_value = fn(self, *arg, **kw)
+                ^^^^^^^^^^^^^^^^^^^^
+  File "E:\LOCK\Education\Code_Academy\Projects\gtsrb_recognition\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 1231, in _prepare_impl
+    self.session.flush()
+  File "E:\LOCK\Education\Code_Academy\Projects\gtsrb_recognition\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 4312, in flush
+    self._flush(objects)
+  File "E:\LOCK\Education\Code_Academy\Projects\gtsrb_recognition\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 4447, in _flush
+    with util.safe_reraise():
+  File "E:\LOCK\Education\Code_Academy\Projects\gtsrb_recognition\.venv\Lib\site-packages\sqlalchemy\util\langhelpers.py", line 146, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "E:\LOCK\Education\Code_Academy\Projects\gtsrb_recognition\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 4408, in _flush
+    flush_context.execute()
+  File "E:\LOCK\Education\Code_Academy\Projects\gtsrb_recognition\.venv\Lib\site-packages\sqlalchemy\orm\unitofwork.py", line 466, in execute
+    rec.execute(self)
+  File "E:\LOCK\Education\Code_Academy\Projects\gtsrb_recognition\.venv\Lib\site-packages\sqlalchemy\orm\unitofwork.py", line 642, in execute
+    util.preloaded.orm_persistence.save_obj(
+  File "E:\LOCK\Education\Code_Academy\Projects\gtsrb_recognition\.venv\Lib\site-packages\sqlalchemy\orm\persistence.py", line 93, in save_obj
+    _emit_insert_statements(
+  File "E:\LOCK\Education\Code_Academy\Projects\gtsrb_recognition\.venv\Lib\site-packages\sqlalchemy\orm\persistence.py", line 1226, in _emit_insert_statements
+    result = connection.execute(
+             ^^^^^^^^^^^^^^^^^^^
+  File "E:\LOCK\Education\Code_Academy\Projects\gtsrb_recognition\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1416, in execute
+    return meth(
+           ^^^^^
+  File "E:\LOCK\Education\Code_Academy\Projects\gtsrb_recognition\.venv\Lib\site-packages\sqlalchemy\sql\elements.py", line 516, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\LOCK\Education\Code_Academy\Projects\gtsrb_recognition\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1639, in _execute_clauseelement
+    ret = self._execute_context(
+          ^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\LOCK\Education\Code_Academy\Projects\gtsrb_recognition\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1848, in _execute_context
+    return self._exec_single_context(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\LOCK\Education\Code_Academy\Projects\gtsrb_recognition\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1988, in _exec_single_context
+    self._handle_dbapi_exception(
+  File "E:\LOCK\Education\Code_Academy\Projects\gtsrb_recognition\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 2343, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "E:\LOCK\Education\Code_Academy\Projects\gtsrb_recognition\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1969, in _exec_single_context
+    self.dialect.do_execute(
+  File "E:\LOCK\Education\Code_Academy\Projects\gtsrb_recognition\.venv\Lib\site-packages\sqlalchemy\engine\default.py", line 922, in do_execute
+    cursor.execute(statement, parameters)
+sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) no such table: model_results
+[SQL: INSERT INTO model_results (model_name, accuracy, f1_score, training_time, timestamp) VALUES (?, ?, ?, ?, ?)]
+[parameters: ('cnn', 0.010278252442041369, 0.0008783862345094484, 1647.0551164150238, None)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2024-09-01 22:21:02,208 INFO: Traffic Sign Recognition startup [in e:\LOCK\Education\Code_Academy\Projects\gtsrb_recognition\src\utils\logging_config.py:15]
+2024-09-01 22:21:10,459 INFO: Traffic Sign Recognition startup [in e:\LOCK\Education\Code_Academy\Projects\gtsrb_recognition\src\utils\logging_config.py:15]
+2024-09-01 22:21:17,601 INFO: Traffic Sign Recognition startup [in e:\LOCK\Education\Code_Academy\Projects\gtsrb_recognition\src\utils\logging_config.py:15]
+2024-09-01 22:21:50,491 INFO: Traffic Sign Recognition startup [in e:\LOCK\Education\Code_Academy\Projects\gtsrb_recognition\src\utils\logging_config.py:15]
+2024-09-01 22:23:07,579 INFO: Loaded data shapes: X=(78418, 32, 32, 3), y=(78418,) [in e:\LOCK\Education\Code_Academy\Projects\gtsrb_recognition\src\app\routes.py:55]
+2024-09-01 22:27:23,202 INFO: Traffic Sign Recognition startup [in e:\LOCK\Education\Code_Academy\Projects\gtsrb_recognition\src\utils\logging_config.py:15]
+2024-09-01 22:27:38,161 INFO: Traffic Sign Recognition startup [in e:\LOCK\Education\Code_Academy\Projects\gtsrb_recognition\src\utils\logging_config.py:15]
+2024-09-01 22:27:54,275 INFO: Traffic Sign Recognition startup [in e:\LOCK\Education\Code_Academy\Projects\gtsrb_recognition\src\utils\logging_config.py:15]
+2024-09-01 22:28:10,460 INFO: Traffic Sign Recognition startup [in e:\LOCK\Education\Code_Academy\Projects\gtsrb_recognition\src\utils\logging_config.py:15]
+2024-09-01 22:28:32,297 INFO: Traffic Sign Recognition startup [in e:\LOCK\Education\Code_Academy\Projects\gtsrb_recognition\src\utils\logging_config.py:15]
+2024-09-01 22:28:40,627 INFO: Traffic Sign Recognition startup [in e:\LOCK\Education\Code_Academy\Projects\gtsrb_recognition\src\utils\logging_config.py:15]
+2024-09-01 22:29:14,508 INFO: Traffic Sign Recognition startup [in e:\LOCK\Education\Code_Academy\Projects\gtsrb_recognition\src\utils\logging_config.py:15]
+2024-09-01 22:30:06,112 INFO: Loaded data shapes: X=(78418, 32, 32, 3), y=(78418,) [in e:\LOCK\Education\Code_Academy\Projects\gtsrb_recognition\src\app\routes.py:55]
+2024-09-01 22:34:42,211 INFO: Traffic Sign Recognition startup [in e:\LOCK\Education\Code_Academy\Projects\gtsrb_recognition\src\utils\logging_config.py:15]
+2024-09-01 22:34:58,635 INFO: Traffic Sign Recognition startup [in e:\LOCK\Education\Code_Academy\Projects\gtsrb_recognition\src\utils\logging_config.py:15]
+2024-09-01 22:35:13,914 INFO: Traffic Sign Recognition startup [in e:\LOCK\Education\Code_Academy\Projects\gtsrb_recognition\src\utils\logging_config.py:15]
+2024-09-01 22:35:25,856 INFO: Traffic Sign Recognition startup [in e:\LOCK\Education\Code_Academy\Projects\gtsrb_recognition\src\utils\logging_config.py:15]
+2024-09-01 22:35:38,904 INFO: Traffic Sign Recognition startup [in e:\LOCK\Education\Code_Academy\Projects\gtsrb_recognition\src\utils\logging_config.py:15]
+2024-09-01 22:35:47,268 INFO: Traffic Sign Recognition startup [in e:\LOCK\Education\Code_Academy\Projects\gtsrb_recognition\src\utils\logging_config.py:15]
+2024-09-01 22:36:14,580 INFO: Traffic Sign Recognition startup [in e:\LOCK\Education\Code_Academy\Projects\gtsrb_recognition\src\utils\logging_config.py:15]
+2024-09-01 22:37:12,611 INFO: Loaded data shapes: X=(78418, 32, 32, 3), y=(78418,) [in e:\LOCK\Education\Code_Academy\Projects\gtsrb_recognition\src\app\routes.py:55]
+2024-09-01 22:51:42,808 INFO: Traffic Sign Recognition startup [in e:\LOCK\Education\Code_Academy\Projects\gtsrb_recognition\src\utils\logging_config.py:15]
+2024-09-01 22:53:32,434 INFO: Traffic Sign Recognition startup [in e:\LOCK\Education\Code_Academy\Projects\gtsrb_recognition\src\utils\logging_config.py:15]
+2024-09-01 22:53:35,287 INFO: Traffic Sign Recognition startup [in e:\LOCK\Education\Code_Academy\Projects\gtsrb_recognition\src\utils\logging_config.py:15]
