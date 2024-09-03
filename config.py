@@ -1,10 +1,10 @@
 import os
 
 class Config:
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///traffic_signs.db'
+    BASE_PATH = os.path.dirname(os.path.abspath(__file__))
+    SQLALCHEMY_DATABASE_URI = f'sqlite:///{BASE_PATH}/traffic_signs.db'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-
-    UPLOAD_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'uploads')
+    UPLOAD_FOLDER = os.path.join(BASE_PATH, 'uploads')
     ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'ppm'}
 
     CNN_EPOCHS = 20
@@ -17,10 +17,8 @@ class Config:
     IMAGE_SIZE = (32, 32)
     AUGMENTATION_FACTOR = 2
 
-    BASE_PATH = os.path.dirname(os.path.abspath(__file__))
     TRAIN_IMAGES_PATH = os.path.join(BASE_PATH, 'data', 'train', 'GTSRB_Final_Training_Images')
     TEST_IMAGES_PATH = os.path.join(BASE_PATH, 'data', 'test', 'GTSRB_Final_Test_Images')
-    TRAIN_CSV_PATH = os.path.join(BASE_PATH, 'data', 'train', 'GTSRB_Final_Training_Images')
     TEST_GT_PATH = os.path.join(BASE_PATH, 'data', 'test', 'GTSRB_Final_Test_GT', 'GT-final_test.csv')
 
     CLASS_NAMES = [
@@ -46,22 +44,13 @@ class Config:
 
     @classmethod
     def get_train_csv_paths(cls):
-        csv_paths = []
-        for folder in cls.get_train_folders():
-            csv_path = os.path.join(cls.TRAIN_CSV_PATH, folder, f'GT-{folder}.csv')
-            if os.path.exists(csv_path):
-                csv_paths.append(csv_path)
-        return csv_paths
+        return [os.path.join(cls.TRAIN_IMAGES_PATH, f'GT-{i:05d}.csv') for i in range(43)]
 
     @classmethod
     def get_train_image_paths(cls):
-        image_paths = []
-        for folder in cls.get_train_folders():
-            folder_path = os.path.join(cls.TRAIN_IMAGES_PATH, folder)
-            for file in os.listdir(folder_path):
-                if file.lower().endswith(('.png', '.jpg', '.jpeg', '.gif', '.ppm')):
-                    image_paths.append(os.path.join(folder_path, file))
-        return image_paths
+        return [os.path.join(cls.TRAIN_IMAGES_PATH, file)
+                for file in os.listdir(cls.TRAIN_IMAGES_PATH)
+                if file.lower().endswith(('.png', '.jpg', '.jpeg', '.gif', '.ppm'))]
 
     @classmethod
     def get_test_image_paths(cls):
