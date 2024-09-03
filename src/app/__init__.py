@@ -17,6 +17,6 @@ def create_app(config_class=Config):
         from src.app import routes
         from src.database import models
         app.register_blueprint(routes.bp)
-        db.create_all() 
+        db.create_all()
 
     return app
