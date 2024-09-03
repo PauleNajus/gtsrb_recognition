@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Traffic Sign Results</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+    <div class="container mx-auto px-4 py-8">
+        <h1 class="text-3xl font-bold mb-8 text-center">Traffic Sign Recognition Results</h1>
+        
+        <div class="bg-white shadow-md rounded-lg p-6">
+            <table class="w-full">
+                <thead>
+                    <tr>
+                        <th class="px-4 py-2">Filename</th>
+                        <th class="px-4 py-2">Width</th>
+                        <th class="px-4 py-2">Height</th>
+                        <th class="px-4 py-2">Class ID</th>
+                        <th class="px-4 py-2">Class Name</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for sign in traffic_signs %}
+                    <tr>
+                        <td class="border px-4 py-2">{{ sign.filename }}</td>
+                        <td class="border px-4 py-2">{{ sign.width }}</td>
+                        <td class="border px-4 py-2">{{ sign.height }}</td>
+                        <td class="border px-4 py-2">{{ sign.class_id }}</td>
+                        <td class="border px-4 py-2">{{ sign.class_name }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="mt-8 text-center">
+            <a href="/" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Back to Home</a>
+        </div>
+    </div>
+</body>
+</html>

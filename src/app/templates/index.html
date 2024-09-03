@@ -16,57 +16,99 @@
 
         <div class="mb-8 bg-white shadow-md rounded-lg p-6">
             <h2 class="text-2xl font-semibold mb-4 text-center">Upload Image</h2>
-            <form id="upload-form" class="flex flex-col items-center" enctype="multipart/form-data">
-                <input type="file" name="file" accept=".png,.jpg,.jpeg,.gif,.ppm" class="mb-4">
-                <select name="model_type" class="mb-4 p-2 border rounded">
-                    <option value="cnn">CNN</option>
-                    <option value="random_forest">Random Forest</option>
-                </select>
-                <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                    Upload
-                </button>
+            <div class="flex justify-center space-x-4 mb-4">
+                <label class="inline-flex items-center">
+                    <input type="radio" class="form-radio" name="model_type" value="cnn" checked>
+                    <span class="ml-2">CNN</span>
+                </label>
+                <label class="inline-flex items-center">
+                    <input type="radio" class="form-radio" name="model_type" value="random_forest">
+                    <span class="ml-2">Random Forest</span>
+                </label>
+            </div>
+            <form id="upload-form" enctype="multipart/form-data" class="flex flex-col items-center">
+                <input type="file" name="file" accept="image/*" class="mb-4">
+                <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Upload</button>
             </form>
             <div id="upload-result" class="mt-4 text-center"></div>
         </div>
 
         <div class="mb-8 bg-white shadow-md rounded-lg p-6">
             <h2 class="text-2xl font-semibold mb-4 text-center">Train Model</h2>
+            
             <div class="flex justify-center space-x-4 mb-4">
-                <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-2" onclick="trainModel('cnn')">CNN</button>
-                <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-2" onclick="trainModel('random_forest')">Random Forest</button>
-                <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-2" onclick="trainModel('vision_transformer')">Vision Transformer</button>
+                <label class="inline-flex items-center">
+                    <input type="radio" class="form-radio" name="train_model_type" value="cnn" checked>
+                    <span class="ml-2">CNN</span>
+                </label>
+                <label class="inline-flex items-center">
+                    <input type="radio" class="form-radio" name="train_model_type" value="random_forest">
+                    <span class="ml-2">Random Forest</span>
+                </label>
             </div>
-            <div id="training-result" class="mt-4 text-center"></div>
-        </div>
+            <div class="text-center mt-4">
+                <button onclick="trainModel()" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Train</button>
+            </div>
 
-        <div class="mb-8 bg-white shadow-md rounded-lg p-6">
-            <h2 class="text-2xl font-semibold mb-4 text-center">Predict</h2>
-            <form id="predict-form" class="flex flex-col items-center" enctype="multipart/form-data">
-                <input type="file" name="file" accept=".png,.jpg,.jpeg,.gif,.ppm" class="mb-4">
-                <select name="model_type" class="mb-4 p-2 border rounded">
-                    <option value="cnn">CNN</option>
-                    <option value="random_forest">Random Forest</option>
-                    <option value="vision_transformer">Vision Transformer</option>
-                </select>
-                <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                    Predict
-                </button>
-            </form>
-            <div id="prediction-result" class="mt-4 text-lg font-semibold text-center"></div>
+            <div id="training-progress" class="mt-4 text-center hidden">
+                <p class="text-lg font-semibold text-blue-600">Training is in progress, please wait...</p>
+            </div>
+
+            <div id="training-result" class="mt-4 text-center">
+                <p id="training-success" class="text-lg font-semibold text-green-600 hidden"></p>
+                <p id="training-error" class="text-lg font-semibold text-red-600 hidden"></p>
+                <div id="training-metrics" class="grid grid-cols-2 gap-4 mt-4 hidden">
+                    <div>
+                        <p class="font-semibold">Model Name:</p>
+                        <p id="model-name"></p>
+                    </div>
+                    <div>
+                        <p class="font-semibold">Training Time:</p>
+                        <p id="training-time"></p>
+                    </div>
+                    <div>
+                        <p class="font-semibold">Training Accuracy:</p>
+                        <p id="training-accuracy"></p>
+                    </div>
+                    <div>
+                        <p class="font-semibold">Training F1 Score:</p>
+                        <p id="training-f1-score"></p>
+                    </div>
+                    <div>
+                        <p class="font-semibold">Validation Accuracy:</p>
+                        <p id="validation-accuracy"></p>
+                    </div>
+                    <div>
+                        <p class="font-semibold">Validation F1 Score:</p>
+                        <p id="validation-f1-score"></p>
+                    </div>
+                    <div>
+                        <p class="font-semibold">Testing Accuracy:</p>
+                        <p id="testing-accuracy"></p>
+                    </div>
+                    <div>
+                        <p class="font-semibold">Testing F1 Score:</p>
+                        <p id="testing-f1-score"></p>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="mb-8 bg-white shadow-md rounded-lg p-6">
             <h2 class="text-2xl font-semibold mb-4 text-center">Results</h2>
-            <div class="text-center">
-                <a href="/results" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">View Results</a>
+            <div class="flex justify-center space-x-4">
+                <a href="/model-results" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">View Model Results</a>
+                <a href="/traffic-sign-results" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">View Traffic Signs Results</a>
             </div>
         </div>
-    </div>
 
     <script>
         document.getElementById('upload-form').addEventListener('submit', function(e) {
             e.preventDefault();
-            var formData = new FormData(this);
+            const formData = new FormData(this);
+            const selectedModel = document.querySelector('input[name="model_type"]:checked');
+            formData.append('model_type', selectedModel.value);
+
             fetch('/upload', {
                 method: 'POST',
                 body: formData
@@ -75,80 +117,70 @@
             .then(data => {
                 if (data.success) {
                     document.getElementById('upload-result').innerHTML = `
-                        <p class="text-green-600">File uploaded successfully: ${data.filename}</p>
-                        <p class="font-bold">Prediction: ${data.prediction} (Class ID: ${data.class_id})</p>
+                        <p class="text-lg font-semibold text-green-600">Upload successful!</p>
+                        <p>Prediction: ${data.prediction}</p>
+                        <p>Class ID: ${data.class_id}</p>
                     `;
                 } else {
                     document.getElementById('upload-result').innerHTML = `
-                        <p class="text-red-600">Error: ${data.error}</p>
+                        <p class="text-lg font-semibold text-red-600">Upload failed: ${data.error}</p>
                     `;
                 }
             })
             .catch(error => {
-                console.error('Error:', error);
                 document.getElementById('upload-result').innerHTML = `
-                    <p class="text-red-600">An unexpected error occurred. Please try again.</p>
+                    <p class="text-lg font-semibold text-red-600">Error: ${error.message}</p>
                 `;
             });
         });
 
-        function trainModel(modelType) {
-            fetch('/train', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ model_type: modelType })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    document.getElementById('training-result').innerHTML = `
-                        <p class="text-green-600">Model trained successfully!</p>
-                        <p>Accuracy: ${data.accuracy}</p>
-                        <p>F1 Score: ${data.f1_score}</p>
-                    `;
-                } else {
-                    document.getElementById('training-result').innerHTML = `
-                        <p class="text-red-600">Error: ${data.error}</p>
-                    `;
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                document.getElementById('training-result').innerHTML = `
-                    <p class="text-red-600">An unexpected error occurred during training. Please try again.</p>
-                `;
-            });
+        function trainModel() {
+    const selectedModel = document.querySelector('input[name="train_model_type"]:checked');
+    if (!selectedModel) {
+        alert('Please select a model type to train.');
+        return;
+    }
+
+    document.getElementById('training-progress').classList.remove('hidden');
+    document.getElementById('training-success').classList.add('hidden');
+    document.getElementById('training-error').classList.add('hidden');
+    document.getElementById('training-metrics').classList.add('hidden');
+
+    const formData = new FormData();
+    formData.append('model_type', selectedModel.value);
+
+    fetch('/train', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        document.getElementById('training-progress').classList.add('hidden');
+        if (data.success) {
+            document.getElementById('training-success').textContent = 'Model trained successfully!';
+            document.getElementById('training-success').classList.remove('hidden');
+            document.getElementById('training-metrics').classList.remove('hidden');
+            
+            const modelType = selectedModel.value === 'cnn' ? 'CNN' : 'Random Forest';
+            document.getElementById('model-name').textContent = `Model: ${modelType}`;
+            document.getElementById('training-time').textContent = data.training_time.toFixed(2) + ' seconds';
+            document.getElementById('training-accuracy').textContent = (data.train_accuracy * 100).toFixed(2) + '%';
+            document.getElementById('training-f1-score').textContent = data.train_f1_score.toFixed(4);
+            document.getElementById('validation-accuracy').textContent = (data.validation_accuracy * 100).toFixed(2) + '%';
+            document.getElementById('validation-f1-score').textContent = data.validation_f1_score.toFixed(4);
+            document.getElementById('testing-accuracy').textContent = (data.test_accuracy * 100).toFixed(2) + '%';
+            document.getElementById('testing-f1-score').textContent = data.test_f1_score.toFixed(4);
+        } else {
+            document.getElementById('training-error').textContent = 'Error: ' + data.error;
+            document.getElementById('training-error').classList.remove('hidden');
         }
-
-        document.getElementById('predict-form').addEventListener('submit', function(e) {
-            e.preventDefault();
-            var formData = new FormData(this);
-            fetch('/predict', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.prediction) {
-                    document.getElementById('prediction-result').innerHTML = `
-                        <p class="text-green-600">Prediction: ${data.prediction}</p>
-                        <p>Class Index: ${data.class_index}</p>
-                    `;
-                } else {
-                    document.getElementById('prediction-result').innerHTML = `
-                        <p class="text-red-600">Error: ${data.error}</p>
-                    `;
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                document.getElementById('prediction-result').innerHTML = `
-                    <p class="text-red-600">An unexpected error occurred during prediction. Please try again.</p>
-                `;
-            });
-        });
+    })
+    .catch(error => {
+        document.getElementById('training-progress').classList.add('hidden');
+        document.getElementById('training-error').textContent = 'Error: ' + error.message;
+        document.getElementById('training-error').classList.remove('hidden');
+    });
+}
     </script>
 </body>
 </html>

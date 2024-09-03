@@ -3,7 +3,7 @@ from src.models.neural_network import ResNet, train_neural_model, TrafficSignDat
 from src.models.vision_transformer import create_vit
 from src.models.hyperparameter_tuning import tune_random_forest
 from src.data.data_processing import preprocess_image, extract_features, load_and_preprocess_data, load_test_data
-from src.database.operations import create_session, add_traffic_sign, add_model_result, get_all_model_results
+from src.database.operations import create_session, add_traffic_sign, add_model_result, get_all_model_results, get_all_traffic_signs
 from src.models.evaluation import evaluate_model, evaluate_cnn
 from sqlalchemy import create_engine
 import torch
@@ -257,3 +257,27 @@ def not_found_error(error):
 def internal_error(error):
     current_app.logger.error(f"Server Error: {str(error)}")
     return jsonify({'error': 'Internal server error'}), 500
+
+@bp.route('/model-results')
+def view_model_results():
+    try:
+        engine = create_engine(current_app.config['SQLALCHEMY_DATABASE_URI'])
+        session = create_session(engine)
+        results = get_all_model_results(session)
+        session.close()
+        return render_template('model_results.html', results=results)
+    except Exception as e:
+        current_app.logger.error(f"Error in view_model_results: {str(e)}", exc_info=True)
+        return jsonify({'error': f'An error occurred while fetching model results: {str(e)}'}), 500
+
+@bp.route('/traffic-sign-results')
+def view_traffic_sign_results():
+    try:
+        engine = create_engine(current_app.config['SQLALCHEMY_DATABASE_URI'])
+        session = create_session(engine)
+        traffic_signs = get_all_traffic_signs(session)
+        session.close()
+        return render_template('traffic_sign_results.html', traffic_signs=traffic_signs)
+    except Exception as e:
+        current_app.logger.error(f"Error in view_traffic_sign_results: {str(e)}", exc_info=True)
+        return jsonify({'error': f'An error occurred while fetching traffic sign results: {str(e)}'}), 500
