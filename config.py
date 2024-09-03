@@ -2,6 +2,7 @@ import os
 
 class Config:
     BASE_PATH = os.path.dirname(os.path.abspath(__file__))
+    DATA_PATH = r'E:\LOCK\Education\Code_Academy\Projects\gtsrb_recognition\data'
     SQLALCHEMY_DATABASE_URI = f'sqlite:///{BASE_PATH}/traffic_signs.db'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     UPLOAD_FOLDER = os.path.join(BASE_PATH, 'uploads')
@@ -17,9 +18,9 @@ class Config:
     IMAGE_SIZE = (32, 32)
     AUGMENTATION_FACTOR = 2
 
-    TRAIN_IMAGES_PATH = os.path.join(BASE_PATH, 'data', 'train', 'GTSRB_Final_Training_Images')
-    TEST_IMAGES_PATH = os.path.join(BASE_PATH, 'data', 'test', 'GTSRB_Final_Test_Images')
-    TEST_GT_PATH = os.path.join(BASE_PATH, 'data', 'test', 'GTSRB_Final_Test_GT', 'GT-final_test.csv')
+    TRAIN_IMAGES_PATH = os.path.join(DATA_PATH, 'train', 'GTSRB_Final_Training_Images')
+    TEST_IMAGES_PATH = os.path.join(DATA_PATH, 'test', 'GTSRB_Final_Test_Images')
+    TEST_GT_PATH = os.path.join(DATA_PATH, 'test', 'GTSRB_Final_Test_GT', 'GT-final_test.csv')
 
     CLASS_NAMES = [
         'Speed limit (20km/h)', 'Speed limit (30km/h)', 'Speed limit (50km/h)',
@@ -44,13 +45,16 @@ class Config:
 
     @classmethod
     def get_train_csv_paths(cls):
-        return [os.path.join(cls.TRAIN_IMAGES_PATH, f'GT-{i:05d}.csv') for i in range(43)]
+        return [os.path.join(cls.TRAIN_IMAGES_PATH, f'{i:05d}', f'GT-{i:05d}.csv') for i in range(43)]
 
     @classmethod
     def get_train_image_paths(cls):
-        return [os.path.join(cls.TRAIN_IMAGES_PATH, file)
-                for file in os.listdir(cls.TRAIN_IMAGES_PATH)
-                if file.lower().endswith(('.png', '.jpg', '.jpeg', '.gif', '.ppm'))]
+        image_paths = []
+        for folder in cls.get_train_folders():
+            folder_path = os.path.join(cls.TRAIN_IMAGES_PATH, folder)
+            image_paths.extend([os.path.join(folder_path, file) for file in os.listdir(folder_path) 
+                                if file.lower().endswith(('.png', '.jpg', '.jpeg', '.gif', '.ppm'))])
+        return image_paths
 
     @classmethod
     def get_test_image_paths(cls):

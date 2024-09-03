@@ -106,7 +106,7 @@ def train_neural_model(model, train_loader, val_loader, epochs=20, learning_rate
         history['train_acc'].append(train_acc)
         history['val_acc'].append(val_accuracy)
 
-        print(f"Epoch {epoch+1}/{epochs}, Train Loss: {train_loss:.4f}, Train Acc: {train_acc:.4f}, Val Loss: {val_loss:.4f}, Val Accuracy: {val_accuracy:.4f}")
+        logger.info(f"Epoch {epoch+1}/{epochs}, Train Loss: {train_loss:.4f}, Train Acc: {train_acc:.4f}, Val Loss: {val_loss:.4f}, Val Accuracy: {val_accuracy:.4f}")
 
     return model, history
 
