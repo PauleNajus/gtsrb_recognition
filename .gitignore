@@ -2,6 +2,10 @@
 __pycache__/
 *.py[cod]
 *$py.class
+cnn_model.pth
+cnn_model
+random_forest_model.pth
+random_forest_model
 
 # C extensions
 *.so
