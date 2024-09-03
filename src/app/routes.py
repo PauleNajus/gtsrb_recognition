@@ -1,6 +1,5 @@
 from flask import Blueprint, render_template, request, jsonify, current_app
 from src.models.neural_network import ResNet, train_neural_model, TrafficSignDataset, evaluate_cnn
-from src.models.vision_transformer import create_vit
 from src.models.hyperparameter_tuning import tune_random_forest
 from src.data.data_processing import preprocess_image, extract_features, load_and_preprocess_data, load_test_data
 from src.database.operations import create_session, add_traffic_sign, add_model_result, get_all_model_results, get_all_traffic_signs
@@ -176,9 +175,6 @@ def predict():
                 model.load_state_dict(torch.load('cnn_model.pth'))
             elif model_type == 'random_forest':
                 model = joblib.load('random_forest_model.joblib')
-            elif model_type == 'vit':
-                model = create_vit()
-                model.load_state_dict(torch.load('vit_model.pth'))
             else:
                 return jsonify({'error': 'Invalid model type'})
             
