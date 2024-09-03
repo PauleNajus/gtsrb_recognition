@@ -4,6 +4,7 @@ __pycache__/
 *$py.class
 cnn_model.pth
 random_forest_model.pth
+ground_truth
 
 # C extensions
 *.so
