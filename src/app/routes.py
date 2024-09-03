@@ -4,7 +4,7 @@ from src.models.vision_transformer import create_vit
 from src.models.hyperparameter_tuning import tune_random_forest
 from src.data.data_processing import preprocess_image, extract_features, load_and_preprocess_data, load_test_data
 from src.database.operations import create_session, add_traffic_sign, add_model_result, get_all_model_results, get_all_traffic_signs
-from src.models.evaluation import evaluate_model, evaluate_cnn
+from src.models.evaluation import evaluate_model
 from sqlalchemy import create_engine
 import torch
 from config import Config
@@ -35,28 +35,16 @@ def upload_image():
             file_path = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
             file.save(file_path)
             
-            current_app.logger.info(f"File saved: {file_path}")
-            
             img = preprocess_image(file_path)
-            current_app.logger.info(f"Image preprocessed successfully. Shape: {img.shape}")
             
             model_type = request.form.get('model_type', 'cnn')
-            if model_type == 'cnn':
-                prediction = predict_cnn(img)
-            elif model_type == 'random_forest':
-                features = extract_features(img)
-                prediction = predict_random_forest(features)
-            else:
-                return jsonify({'success': False, 'error': 'Invalid model type'}), 400
-            
-            current_app.logger.info(f"Prediction made successfully: {prediction}")
+            prediction = predict_cnn(img) if model_type == 'cnn' else predict_random_forest(extract_features(img))
             
             class_name = Config.CLASS_NAMES[prediction]
             
             engine = create_engine(current_app.config['SQLALCHEMY_DATABASE_URI'])
-            session = create_session(engine)
-            add_traffic_sign(session, filename, img.shape[1], img.shape[0], prediction, class_name)
-            current_app.logger.info(f"Traffic sign added to database: {filename}")
+            with create_session(engine) as session:
+                add_traffic_sign(session, filename, img.shape[1], img.shape[0], prediction, class_name)
             
             return jsonify({
                 'success': True,
@@ -70,12 +58,8 @@ def upload_image():
     
 def predict_cnn(img):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    model = ResNet(num_classes=43)
-    model_path = 'cnn_model.pth'
-    if not os.path.exists(model_path):
-        raise FileNotFoundError(f"Model file not found: {model_path}")
-    model.load_state_dict(torch.load(model_path, map_location=device, weights_only=True))
-    model.to(device)
+    model = ResNet(num_classes=43).to(device)
+    model.load_state_dict(torch.load('cnn_model.pth', map_location=device))
     model.eval()
     
     with torch.no_grad():
@@ -90,18 +74,12 @@ def predict_random_forest(features):
     expected_features = model.n_features_in_
     
     if len(features) != expected_features:
-        print(f"Warning: Feature mismatch. Expected {expected_features}, got {len(features)}")
-        if len(features) < expected_features:
-            features = np.pad(features, (0, expected_features - len(features)))
-        else:
-            features = features[:expected_features]
+        features = np.pad(features, (0, max(0, expected_features - len(features))))[:expected_features]
     
-    prediction = model.predict([features])[0]
-    return prediction
+    return model.predict([features])[0]
     
 def allowed_file(filename):
-    return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in current_app.config['ALLOWED_EXTENSIONS']
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in current_app.config['ALLOWED_EXTENSIONS']
 
 @bp.route('/train', methods=['POST'])
 def train_model():
@@ -116,16 +94,14 @@ def train_model():
         start_time = time.time()
         
         if model_type == 'cnn':
-            model = ResNet(num_classes=43)
+            model = ResNet(num_classes=43).to(torch.device("cuda" if torch.cuda.is_available() else "cpu"))
             train_dataset = TrafficSignDataset(X_train, y_train)
-            train_loader = DataLoader(train_dataset, batch_size=32, shuffle=True)
             val_dataset = TrafficSignDataset(X_val, y_val)
-            val_loader = DataLoader(val_dataset, batch_size=32)
             test_dataset = TrafficSignDataset(X_test, y_test)
-            test_loader = DataLoader(test_dataset, batch_size=32)
             
-            device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-            model = model.to(device)
+            train_loader = DataLoader(train_dataset, batch_size=32, shuffle=True)
+            val_loader = DataLoader(val_dataset, batch_size=32)
+            test_loader = DataLoader(test_dataset, batch_size=32)
             
             trained_model, history = train_neural_model(model, train_loader, val_loader, epochs=10)
             train_results = evaluate_cnn(trained_model, train_loader)
@@ -140,14 +116,9 @@ def train_model():
             X_test_reshaped = X_test.reshape(X_test.shape[0], -1)
             model, best_params = tune_random_forest(X_reshaped, y, n_trials=20)
             
-            y_train_pred = model.predict(X_reshaped)
-            train_results = evaluate_model(y, y_train_pred)
-            
-            y_val_pred = model.predict(X_val_reshaped)
-            val_results = evaluate_model(y_val, y_val_pred)
-            
-            y_test_pred = model.predict(X_test_reshaped)
-            test_results = evaluate_model(y_test, y_test_pred)
+            train_results = evaluate_model(y, model.predict(X_reshaped))
+            val_results = evaluate_model(y_val, model.predict(X_val_reshaped))
+            test_results = evaluate_model(y_test, model.predict(X_test_reshaped))
 
             joblib.dump(model, 'random_forest_model.joblib')
         
@@ -157,8 +128,7 @@ def train_model():
         training_time = time.time() - start_time
 
         engine = create_engine(current_app.config['SQLALCHEMY_DATABASE_URI'])
-        session = create_session(engine)
-        try:
+        with create_session(engine) as session:
             add_model_result(
                 session, 
                 model_type, 
@@ -170,8 +140,6 @@ def train_model():
                 test_results['f1_score'],
                 training_time
             )
-        finally:
-            session.close()
         
         return jsonify({
             'success': 'Model trained and tested successfully',
@@ -207,7 +175,6 @@ def predict():
                 model = ResNet(num_classes=43)
                 model.load_state_dict(torch.load('cnn_model.pth'))
             elif model_type == 'random_forest':
-                import joblib
                 model = joblib.load('random_forest_model.joblib')
             elif model_type == 'vit':
                 model = create_vit()
@@ -237,34 +204,12 @@ def predict():
         current_app.logger.error(f"Error in predict: {str(e)}")
         return jsonify({'error': 'An error occurred during prediction'})
 
-@bp.route('/results')
-def view_results():
-    try:
-        engine = create_engine(current_app.config['SQLALCHEMY_DATABASE_URI'])
-        session = create_session(engine)
-        results = get_all_model_results(session)
-        session.close()
-        return render_template('results.html', results=results)
-    except Exception as e:
-        current_app.logger.error(f"Error in view_results: {str(e)}", exc_info=True)
-        return jsonify({'error': f'An error occurred while fetching results: {str(e)}'}), 500
-
-@bp.errorhandler(404)
-def not_found_error(error):
-    return jsonify({'error': 'Not found'}), 404
-
-@bp.errorhandler(500)
-def internal_error(error):
-    current_app.logger.error(f"Server Error: {str(error)}")
-    return jsonify({'error': 'Internal server error'}), 500
-
 @bp.route('/model-results')
 def view_model_results():
     try:
         engine = create_engine(current_app.config['SQLALCHEMY_DATABASE_URI'])
-        session = create_session(engine)
-        results = get_all_model_results(session)
-        session.close()
+        with create_session(engine) as session:
+            results = get_all_model_results(session)
         return render_template('model_results.html', results=results)
     except Exception as e:
         current_app.logger.error(f"Error in view_model_results: {str(e)}", exc_info=True)
@@ -274,10 +219,18 @@ def view_model_results():
 def view_traffic_sign_results():
     try:
         engine = create_engine(current_app.config['SQLALCHEMY_DATABASE_URI'])
-        session = create_session(engine)
-        traffic_signs = get_all_traffic_signs(session)
-        session.close()
+        with create_session(engine) as session:
+            traffic_signs = get_all_traffic_signs(session)
         return render_template('traffic_sign_results.html', traffic_signs=traffic_signs)
     except Exception as e:
         current_app.logger.error(f"Error in view_traffic_sign_results: {str(e)}", exc_info=True)
         return jsonify({'error': f'An error occurred while fetching traffic sign results: {str(e)}'}), 500
+
+@bp.errorhandler(404)
+def not_found_error(error):
+    return jsonify({'error': 'Not found'}), 404
+
+@bp.errorhandler(500)
+def internal_error(error):
+    current_app.logger.error(f"Server Error: {str(error)}")
+    return jsonify({'error': 'Internal server error'}), 500
