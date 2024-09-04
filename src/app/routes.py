@@ -98,11 +98,11 @@ def train_model():
             val_dataset = TrafficSignDataset(X_val, y_val)
             test_dataset = TrafficSignDataset(X_test, y_test)
             
-            train_loader = DataLoader(train_dataset, batch_size=32, shuffle=True)
-            val_loader = DataLoader(val_dataset, batch_size=32)
-            test_loader = DataLoader(test_dataset, batch_size=32)
+            train_loader = DataLoader(train_dataset, batch_size=256, shuffle=True)
+            val_loader = DataLoader(val_dataset, batch_size=256)
+            test_loader = DataLoader(test_dataset, batch_size=256)
             
-            trained_model, history = train_neural_model(model, train_loader, val_loader, epochs=8)
+            trained_model, history = train_neural_model(model, train_loader, val_loader, epochs=5)
             train_results = evaluate_cnn(trained_model, train_loader)
             val_results = evaluate_cnn(trained_model, val_loader)
             test_results = evaluate_cnn(trained_model, test_loader)
