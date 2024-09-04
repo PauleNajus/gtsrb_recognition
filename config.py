@@ -2,21 +2,11 @@ import os
 
 class Config:
     BASE_PATH = os.path.dirname(os.path.abspath(__file__))
-    DATA_PATH = r'E:\LOCK\Education\Code_Academy\Projects\gtsrb_recognition\data'
+    DATA_PATH = r'E:/LOCK/Education/Code_Academy/Projects/gtsrb_recognition/data'
     SQLALCHEMY_DATABASE_URI = f'sqlite:///{BASE_PATH}/traffic_signs.db'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     UPLOAD_FOLDER = os.path.join(BASE_PATH, 'uploads')
     ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'ppm'}
-
-    CNN_EPOCHS = 20
-    CNN_BATCH_SIZE = 32
-    CNN_LEARNING_RATE = 0.001
-
-    RF_N_ESTIMATORS = 100
-    RF_MAX_DEPTH = 10
-
-    IMAGE_SIZE = (32, 32)
-    AUGMENTATION_FACTOR = 2
 
     TRAIN_IMAGES_PATH = os.path.join(DATA_PATH, 'train', 'GTSRB_Final_Training_Images')
     TEST_IMAGES_PATH = os.path.join(DATA_PATH, 'test', 'GTSRB_Final_Test_Images')

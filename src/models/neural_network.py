@@ -57,7 +57,7 @@ class ResNet(nn.Module):
         out = out.view(out.size(0), -1)
         return self.fc(out)
 
-def train_neural_model(model, train_loader, val_loader, epochs=20, learning_rate=0.001):
+def train_neural_model(model, train_loader, val_loader, epochs=8, learning_rate=0.001):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model = model.to(device)
     criterion = nn.CrossEntropyLoss()

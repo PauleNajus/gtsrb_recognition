@@ -102,7 +102,7 @@ def train_model():
             val_loader = DataLoader(val_dataset, batch_size=32)
             test_loader = DataLoader(test_dataset, batch_size=32)
             
-            trained_model, history = train_neural_model(model, train_loader, val_loader, epochs=10)
+            trained_model, history = train_neural_model(model, train_loader, val_loader, epochs=8)
             train_results = evaluate_cnn(trained_model, train_loader)
             val_results = evaluate_cnn(trained_model, val_loader)
             test_results = evaluate_cnn(trained_model, test_loader)
